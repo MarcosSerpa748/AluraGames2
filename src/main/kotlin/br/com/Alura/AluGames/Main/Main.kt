@@ -1,48 +1,42 @@
-package org.example
-
-import com.google.gson.Gson
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse.BodyHandlers
+package org.example.br.com.Alura.AluGames.Main
+import br.com.Alura.AluGames.Modelos.Gamer
+import br.com.Alura.AluGames.Servicoa.RequisicaoAPI
+import br.com.Alura.AluGames.Modelos.Jogo
 import java.util.Scanner
-
-
 fun main() {
     val sc = Scanner(System.`in`)
-    val busca = sc.nextLine()
+    val gamer = Gamer.criarGamer(sc)
+    do{
+        println("Digite o ID do jogo:")
+        val id = sc.nextLine()
 
-    val client: HttpClient = HttpClient.newHttpClient()
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create("https://www.cheapshark.com/api/1.0/games?id=$busca"))
-        .build()
-    val response = client
-        .send(request, BodyHandlers.ofString())
+        var meuJogo: Jogo? = null
 
-    val json = response.body()
-    val gson = Gson()
+        val resultado = runCatching {
 
-    var meuJogo:Jogo? = null
+            val infoRequisicao = RequisicaoAPI.buscaJogo(id)
 
-       val resultado = runCatching {
-           val meuInfoJogo = gson.fromJson(json,InfoJogo::class.java)
-           meuJogo = Jogo(meuInfoJogo.info.title,meuInfoJogo.info.thumb)
-       }
-    resultado.onFailure {
-        println("ID inexistente, tente outro")
-    }
-    resultado.onSuccess {
-        println("Voçê deseja inserir uma descrição ao jogo? S/N")
-        val escolha = sc.nextLine().uppercase()
-        if (escolha.equals("S")){
-            print("Digite sua descrição:")
-            val descricao = sc.nextLine()
-            meuJogo?.descricao = descricao
-        }else{
-            meuJogo?.descricao = meuJogo?.titulo
+            meuJogo = Jogo(infoRequisicao.info.title,infoRequisicao.info.thumb)
         }
-        println(meuJogo)
-    }
+        resultado.onFailure {
+            println("ID inexistente, tente outro")
+        }
+        resultado.onSuccess {
+            println("Você deseja inserir uma descrição ao jogo? S/N")
+            val escolha = sc.nextLine()
+            if (escolha.equals("s",true)){
+                print("Digite sua descrição:")
+                val descricao = sc.nextLine()
+                meuJogo?.descricao = descricao
+            }else{
+                meuJogo?.descricao = meuJogo?.titulo
+            }
+        }
+        gamer.jogosBuscados.add(meuJogo)
+        println("Você deseja continuar a pesquisar jogos?(S/N)")
+        val escolha = sc.nextLine()
 
+    }while (escolha.equals("s",true))
 
+    println("Lista de jogos:${gamer.jogosBuscados}")
 }

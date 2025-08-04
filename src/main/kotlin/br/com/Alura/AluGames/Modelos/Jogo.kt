@@ -1,4 +1,4 @@
-package org.example.br.com.Alura.AluGames.Modelos
+package br.com.Alura.AluGames.Modelos
 
 data class Jogo(val titulo:String,val capa:String){
     var preco = 0.0

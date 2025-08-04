@@ -1,8 +1,5 @@
-package br.com.Alura.AluGames.Servicoa
+package br.com.Alura.AluGames.Modelos
 
-import br.com.Alura.AluGames.Modelos.Aluguel
-import br.com.Alura.AluGames.Modelos.Periodo
-import org.example.br.com.Alura.AluGames.Modelos.Jogo
 import java.util.Scanner
 import kotlin.random.Random
 
@@ -17,9 +14,8 @@ data class Gamer(var nome:String,var email:String){
         }
     var idInterno:String? = null
         private set
-    val listaDeJogosBuscados = mutableListOf<Jogo?>()
-    val alugados = mutableListOf<Aluguel>()
-
+    val jogosBuscados = mutableListOf<Jogo?>()
+    val jogosAlugados = mutableListOf<Aluguel>()
 
     fun validarEmail():String{
         val regex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
@@ -70,9 +66,9 @@ data class Gamer(var nome:String,var email:String){
             }
         }
     }
-    fun alugarJogo(jogo:Jogo,periodo: Periodo): Aluguel {
+    fun alugarJogo(jogo: Jogo, periodo: Periodo): Aluguel {
         val aluguel = Aluguel(this,jogo,periodo)
-        alugados.add(aluguel)
+        jogosAlugados.add(aluguel)
         return aluguel
 
     }
