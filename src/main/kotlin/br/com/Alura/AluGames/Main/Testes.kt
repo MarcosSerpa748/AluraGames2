@@ -1,27 +1,28 @@
-import br.com.Alura.AluGames.Modelos.Periodo
+import br.com.Alura.AluGames.Modelos.Gamer
+import br.com.Alura.AluGames.Modelos.PlanoAssinatura
 import br.com.Alura.AluGames.Servicoa.RequisicaoAPI
 import java.time.LocalDate
+import java.util.*
 
 fun main(){
-
-    val listaGamer = RequisicaoAPI.buscaListaGamer()
+    val sc = Scanner(System.`in`)
     val listaJogos = RequisicaoAPI.listaJogoJson()
 
-    val gamer1 = listaGamer.get(3)
+    val gamer = Gamer.criarGamer(sc)
+
     val jogo1 = listaJogos.get(10)
     val jogo2 = listaJogos.get(4)
     val jogo3 = listaJogos.get(8)
+    val jogo4 = listaJogos.get(1)
 
-    val periodo1 = Periodo(LocalDate.now(), LocalDate.now().plusDays(4))
-    val periodo2 = Periodo(LocalDate.now(), LocalDate.now().plusDays(8))
-    val periodo3 = Periodo(LocalDate.now(), LocalDate.now().plusDays(2))
+    gamer.alugarJogo(jogo1, LocalDate.of(2025,8,6), LocalDate.of(2025,8,11))
+    gamer.alugarJogo(jogo2, LocalDate.of(2025,8,9), LocalDate.of(2025,8,12))
+    gamer.alugarJogo(jogo3, LocalDate.of(2025,8,13), LocalDate.of(2025,8,16))
+    gamer.alugarJogo(jogo4, LocalDate.of(2025,8,17), LocalDate.of(2025,8,20))
 
+    gamer.recomendar(jogo1,7)
+    gamer.recomendar(jogo1,8)
 
-    gamer1.alugarJogo(jogo1,periodo2)
-    gamer1.alugarJogo(jogo3,periodo1)
-    gamer1.alugarJogo(jogo2,periodo3)
-
-    println(gamer1.jogosAlugados)
-
+    println(gamer.jogosRecomendados)
 
 }

@@ -32,16 +32,6 @@ class RequisicaoAPI {
             return meuInfoJogo
 
         }
-        fun buscaListaGamer(): List<Gamer> {
-            val url = "https://raw.githubusercontent.com/jeniblodev/arquivosJson/main/gamers.json"
-            val json = requisicao(url)
-            val gson = Gson()
-
-            val tipoNecessario = object : TypeToken<List<Gamer>>() {}.type
-            val lista: List<Gamer> = gson.fromJson(json, tipoNecessario)
-
-            return lista
-        }
         fun listaJogoJson():List<Jogo>{
             val url = "https://raw.githubusercontent.com/jeniblodev/arquivosJson/main/jogos.json"
 

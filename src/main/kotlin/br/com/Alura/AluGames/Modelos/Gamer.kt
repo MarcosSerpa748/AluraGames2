@@ -1,9 +1,11 @@
 package br.com.Alura.AluGames.Modelos
 
+import br.com.Alura.AluGames.utiltario.Recomendavel
+import java.time.LocalDate
 import java.util.Scanner
 import kotlin.random.Random
 
-data class Gamer(var nome:String,var email:String){
+data class Gamer(var nome:String,var email:String):Recomendavel{
     var dataNascimento:String? = null
     var usuario:String? = null
         set(value) {
@@ -14,8 +16,15 @@ data class Gamer(var nome:String,var email:String){
         }
     var idInterno:String? = null
         private set
+    
+    var plano: Plano = PlanoAvulso("BRONZE")
+
     val jogosBuscados = mutableListOf<Jogo?>()
     val jogosAlugados = mutableListOf<Aluguel>()
+    val listaNotas = mutableListOf<Int>()
+    val jogosRecomendados = mutableListOf<Jogo>()
+
+    var id = 0
 
     fun validarEmail():String{
         val regex = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
@@ -66,15 +75,39 @@ data class Gamer(var nome:String,var email:String){
             }
         }
     }
-    fun alugarJogo(jogo: Jogo, periodo: Periodo): Aluguel {
-        val aluguel = Aluguel(this,jogo,periodo)
+    fun alugarJogo(jogo: Jogo, dataInicial:LocalDate,dataFinal:LocalDate): Aluguel {
+        val aluguel = Aluguel(this,jogo,dataInicial,dataFinal)
         jogosAlugados.add(aluguel)
         return aluguel
 
     }
     override fun toString(): String {
-        return "Gamer(nome='$nome', email='$email', dataNascimento=$dataNascimento, usuário=$usuario, id=$idInterno)"
+        return "Nome:$nome\n"+
+                "Email:$email\n"+
+                "DataNascimento:$dataNascimento\n"+
+                "Usuário:$usuario\n"+
+                "ID:$idInterno\n"+
+                "AvaliaçãoMédia:$media\n" +
+                "id:$id"
     }
 
+    fun filtroDeMes(mes:Int): List<Aluguel> {
+        return jogosAlugados
+            .filter { aluguel ->  aluguel.dataIncial.monthValue == mes}
+    }
 
+    override val media: Double
+        get() = listaNotas.average()
+
+    override fun avaliar(nota: Int) {
+        if (nota >= 1 && nota <= 10) {
+            listaNotas.add(nota)
+        }else{
+            throw IllegalArgumentException("Número inválido!")
+        }
+    }
+    fun recomendar(jogo: Jogo,nota:Int){
+        jogosRecomendados.add(jogo)
+        //jogo.avaliar(nota)
+    }
 }

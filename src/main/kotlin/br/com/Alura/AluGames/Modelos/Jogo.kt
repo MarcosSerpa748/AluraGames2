@@ -1,18 +1,34 @@
 package br.com.Alura.AluGames.Modelos
 
-data class Jogo(val titulo:String,val capa:String){
-    var preco = 0.0
-    var descricao:String? = null
+import br.com.Alura.AluGames.utiltario.Recomendavel
+import javax.persistence.*
+import kotlin.jvm.Transient
 
-    constructor(titulo: String, capa: String, preco: Double, descricao:String) : this(titulo,capa){
-        this.preco = preco
-        this.descricao = descricao
+data class Jogo(val titulo:String,val capa:String,val preco:Double,val descricao:String):Recomendavel{
+    @Id@GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id = 0
+    @Transient
+    val listaNotas = mutableListOf<Int>()
+
+    override val media: Double
+        get() = listaNotas.average()
+
+    constructor(titulo: String, capa: String, preco: Double, descricao:String,id:Int):this(titulo,capa,preco, descricao){
+        this.id = id
     }
 
     override fun toString(): String {
         return "titulo:$titulo\n" +
                 "capa:$capa\n" +
                 "preço:$preco\n"+
-                "descrição:$descricao\n"
+                "descrição:$descricao\n"+
+                "Nota:$media\n" +
+                "id:$id"
     }
+
+    override fun avaliar(nota: Int) {
+        listaNotas.add(nota)
+    }
+
+
 }
